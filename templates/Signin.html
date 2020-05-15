@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Sign in</title>
+   </head>
+   <body>
+      <h2 align="center">Sign in</h2>
+      <form action="/signin" method="POST">
+          <br><br>
+         <table align="center">
+            <tbody>
+               <tr>
+                  <td><label for="username">Username: </label></td>
+                  <td><input type="text" id="username" name="username"></td>
+               </tr>
+               <tr>
+                  <td><label for="username">Password: </label></td>
+                  <td><input type="password" id="password" name="password"></td>
+               </tr>
+               <tr>
+                  <td height="30" colspan="2"><label style="color:red">{{ info }}</label></td>
+               </tr>
+               <tr>
+                  <td align="right"><input type="submit" value="Sign in"></td>
+                  <td align="right"><input type="reset" value="Clear"></td>
+               </tr>
+         </table>
+      </form>
+   </body>
+</html>
+

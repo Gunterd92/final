@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>View Currency Graph</title>
+   </head>
+   <body>
+      <h2 align="center">View Currency Graph</h2>
+      <form action="/diplay_graph" method="POST">
+          <br><br>
+         <table align="center">
+            <tbody>
+               <tr>
+                  <td><label for="bars">No. of bars: </label></td>
+                  <td><input type="text" id="bars" name="bars"></td>
+               </tr>
+               <tr>
+                  <td><label for="currency">Market Currency: </label></td>
+                   <td>
+                   <select  id="currency" name="currency">
+                                    {% for item in currencies %}
+                                    <option value="{{item[0]}}">{{item[1]}}</option>
+                                    {% endfor %}
+                                </select>
+                   </td>
+               </tr>
+               <tr>
+                  <td><label for="period">Period: </label></td>
+                  <td>
+                      <select id="period" name="period">
+                          <option value="m1">m1</option>
+                          <option value="m5">m5</option>
+                          <option value="m30">m30</option>
+                          <option value="H1">H1</option>
+                          <option value="H2">H2</option>
+                          <option value="H3">H3</option>
+                          <option value="H4">H4</option>
+                          <option value="H6">H6</option>
+                          <option value="H8">H8</option>
+                          <option value="D1">D1</option>
+                          <option value="W1">W1</option>
+                          <option value="M1">M1</option>
+                      </select>
+                  </td>
+               </tr>
+               <tr>
+                  <td><label for="market_value">Market Value: </label></td>
+                  <td>
+                      <select id="market_value" name="market_value">
+                          <option value="0">askopen</option>
+                          <option value="1">askclose</option>
+                          <option value="2">asklow</option>
+                          <option value="3">askhigh</option>
+                          <option value="4">bidopen</option>
+                          <option value="5">bidclose</option>
+                          <option value="6">bidhigh</option>
+                          <option value="7">bidlow</option>
+                      </select>
+                  </td>
+               </tr>
+               <tr>
+                  <td height="30" colspan="2"></td>
+               </tr>
+               <tr>
+                  <td align="right"><input type="submit" value="View Graph"></td>
+                  <td align="right"><input type="reset" value="Clear"></td>
+               </tr>
+         </table>
+      </form>
+   </body>
+</html>
+
