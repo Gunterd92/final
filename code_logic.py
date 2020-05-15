@@ -104,7 +104,7 @@ def Data_Collect():
     #data = con.get_candles("USD/CAD", period=Period, number=1000)  # daily data
     con.close()
     print(data)
-    data.to_csv('Data.csv', encoding='utf-8', index=True)
+    #data.to_csv('Data.csv', encoding='utf-8', index=True)
     # Fibonic_Series_Graph(data, value[option])
     CandleStick_Graph()
 
@@ -128,11 +128,11 @@ def CandleStick_Graph():
     global loc2
     global data
     #df = pd.read_csv('Data.csv')
-    df = data	
+    df = pd.DataFrame(data)
     #df2 = pd.read_csv('Data.csv')
     df = df[::-1]
-    df.columns = ['d', 'o', 'h', 'l', 'c', 'o2', 'h2', 'l2', 'c2', 'v']
-    df.drop(['d', 'v'], axis=1, inplace=True)
+    df.columns = ['o', 'h', 'l', 'c', 'o2', 'h2', 'l2', 'c2', 'v']
+    df.drop(['v'], axis=1, inplace=True)
     df['mean'] = df.mean(axis=1)
     column = int(var_bars)
 
