@@ -2,7 +2,7 @@
 import fxcmpy
 import pandas as pd
 import numpy as np
-import datetime as dt
+import datetime
 import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.graph_objects as go
@@ -19,6 +19,19 @@ var_currency = 47
 var_period = "m1"
 var_market_value = 2
 var_listing = []
+Sun = 0
+Moon = 0
+Mercury = 0
+Venus = 0
+Mars = 0
+Ceres = 0
+Jupiter = 0
+Saturn = 0
+Uranus = 0 
+Neptune = 0
+Pluto = 0
+Eris = 0
+marketname = ""
 
 token = '58f6b3b0d2fd0411de1d85d418345291d375e5a5'
 
@@ -56,6 +69,58 @@ def get_currencies():
     var_listing = listing
     return listing
 
+def planetarycalculation(value, multiplier, high, low):
+	planetArray = []
+	NewValue = value * multiplier
+	Increment = multiplier * 360
+	NewValue=0
+	while NewValue < high + Increment/3:
+		if NewValue > low - Increment/3:
+			planetArray.append(NewValue)
+		NewValue += Increment
+	return planetArray
+
+
+def SetPlanetDegrees():
+    global Sun
+    global Moon 
+    global Mercury
+    global Venus
+    global Mars
+    global Ceres
+    global Jupiter
+    global Saturn
+    global Uranus
+    global Neptune
+    global Pluto
+    global Eris
+
+    date_str = str(datetime.datetime.now().month) + "/" + str(datetime.datetime.now().day) + "/" + str(datetime.datetime.now().year)
+
+
+    date_split = date_str.split('/')
+    df = pd.read_excel('planet.xlsx', sheet_name='Sheet1')
+    date_obj = datetime.datetime(int(date_split[2]), int(date_split[0]), int(date_split[1]), 0, 0)
+    try:
+        data_date = list(df[date_obj])
+        print(data_date)
+    except KeyError:
+        print('No data found.')
+        data_date = [0]*12
+
+    Sun = data_date[0]
+    Moon = data_date[1]
+    Mercury = data_date[2]
+    Venus = data_date[3]
+    Mars = data_date[4]
+    Ceres = data_date[5]
+    Jupiter = data_date[6]
+    Saturn = data_date[7]
+    Uranus = data_date[8]
+    Neptune = data_date[9]
+    Pluto = data_date[10]
+    Eris = data_date[10]
+
 
 def Data_Collect():
     global var_bars
@@ -65,23 +130,11 @@ def Data_Collect():
     global token
     global var_listing
     global data
+    global marketname
     print('Function [Data Collect] param:', 'Currency:', var_currency, 'Period:',var_period)
     # Creating list for Data collection
     con = fxcmpy.fxcmpy(access_token=token, log_level='error', log_file=None)
-    """Listing = ['2']
-    instruments = con.get_instruments_for_candles()
-    # Currency Colection
-    for i in range(int(len(instruments) / 4)):
-        data = instruments[i * 4:(i + 1) * 4]
-        for d in data:
-            Listing.append(d)
 
-    # input area
-    i = 0
-    for x in Listing:
-        if i != 0:
-            print(f'{i}. {x}')
-        i += 1
     #choose = int(input("Select the market Currency by number: "))"""
     choose = var_currency
 
@@ -89,23 +142,17 @@ def Data_Collect():
     Period = var_period
 
     value = ['askopen', 'askclose', 'asklow', 'askhigh', 'bidopen', 'bidclose', 'bidhigh', 'bidlow']
-
-    """i = 0
-    for x in value:
-        print(f"{i}. {x}")
-        i += 1"""
-
     #option = int(input("Choose the Market value: "))
     option = var_market_value
-
     # Getting market prices by period
     print('Chosen Currency:', var_listing[choose][1])
     data = con.get_candles(var_listing[choose][1], period=Period, number=1000)  # daily data
     #data = con.get_candles("USD/CAD", period=Period, number=1000)  # daily data
     con.close()
     print(data)
-    #data.to_csv('Data.csv', encoding='utf-8', index=True)
     # Fibonic_Series_Graph(data, value[option])
+
+    marketname = var_listing[choose][1]
     CandleStick_Graph()
 
 
@@ -113,34 +160,60 @@ def show_in_window(fig):
     # Webview Candlestick Graph
     file_path = os.getcwd() + "/templates/name.html"
     plotly.offline.plot(fig, filename=file_path, auto_open=False)
-    #app = QApplication(sys.argv)
-    #web = QWebEngineView()
     file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), file_path))
-    #web.load(QUrl.fromLocalFile(file_path))
-    #web.show()
-    #sys.exit(app.exec_())
     print('Return / Task completed from code_logic.py')
     return
 
 
 def CandleStick_Graph():
     global var_bars
-    global loc2
+    global var_listing
     global data
-    #df = pd.read_csv('Data.csv')
+    global Sun
+    global Moon 
+    global Mercury
+    global Venus
+    global Mars
+    global Ceres
+    global Jupiter
+    global Saturn
+    global Uranus
+    global Neptune
+    global Pluto
+    global Eris
+    global marketname
+
+    sun = []
+    moon = []
+    mercury = []
+    venus = [] 
+    mars = []
+    ceres = []
+    jupiter = []
+    saturn = []
+    uranus = []
+    neptune = []
+    pluto = []
+    eris =[]
+    mult = 0.0
+    highs = 0
+    lows = 0
+
+
     df = pd.DataFrame(data)
-    #df2 = pd.read_csv('Data.csv')
     df = df[::-1]
     df.columns = ['o', 'h', 'l', 'c', 'o2', 'h2', 'l2', 'c2', 'v']
     df.drop(['v'], axis=1, inplace=True)
     df['mean'] = df.mean(axis=1)
     column = int(var_bars)
 
+    mean = np.array(df.iloc[0:column, [8]])
+    mean = mean[::-1]
     sig = np.array(df.iloc[0:column, [8]])
     sig = sig[::-1]
     sig = sig.reshape(1, column)
 
-
+    #Main calculation
     sig = sig - (np.mean(sig))
     N = (sig.shape[1])
     ft = np.fft.fft(sig)
@@ -167,17 +240,7 @@ def CandleStick_Graph():
     ylim_max = max(sig_pos) * 1.05
     ylim_min = min(sig_neg) * 1.05
     ylims = np.array([ylim_min, ylim_max])
-    # print(ylims)
-    # plt.subplot(3,1,3)
     sig1 = sig.reshape(N, 1)
-    # ax = plt.gca()
-    # plt.plot(sig1)
-    # ax.set_xlabel("Time")
-    # ax.set_ylabel("amplitude")
-    # ax.set_title("Example Signal")
-    # ax.set_ylim(ylim_min, ylim_max)
-    # plt.show()
-    # pause()
     n_s_i = sorted_indices + 1
     mm = max(max(sorted_mags / 100))
     significant_freqs = np.where(sorted_mags > mm)
@@ -187,8 +250,34 @@ def CandleStick_Graph():
     NN = len(mags)
     n_s_i = sorted_indices + 1
     colors = itertools.cycle(["r", "g", "k", "b", "m"])
-    #    plt.figure()
-    
+
+    #set planetary values
+    SetPlanetDegrees()
+
+    #set multiplier
+    if mean.max() < 3:
+        mult = .0001
+    else: mult = .01
+     
+    #set highs and lows
+    highs = mean.max()
+    lows = mean.min()
+
+    sun = planetarycalculation(Sun, mult, highs, lows)
+    moon = planetarycalculation(Moon, mult, highs, lows)
+    mercury = planetarycalculation(Mercury, mult, highs, lows)
+    venus = planetarycalculation(Venus, mult, highs, lows)
+    mars = planetarycalculation(Mars, mult, highs, lows)
+    ceres = planetarycalculation(Ceres, mult, highs, lows)
+    jupiter = planetarycalculation(Jupiter, mult, highs, lows)
+    saturn = planetarycalculation(Saturn, mult, highs, lows)
+    uranus = planetarycalculation(Uranus, mult, highs, lows)
+    neptune = planetarycalculation(Neptune, mult, highs, lows)
+    pluto = planetarycalculation(Pluto, mult, highs, lows)
+    eris = planetarycalculation(Eris, mult, highs, lows)
+    print("highs ", highs)
+    print("lows ", lows)
+    print(sun)
     for i in range(1):
         
         omega = 2 * np.pi * (n_s_i[0, i]) / N
@@ -228,17 +317,129 @@ def CandleStick_Graph():
             break
 
     synth_op = sinusoid + sinusoid2 + sinusoid3 + sinusoid4 + sinusoid5 + sinusoid6 + sinusoid7 + sinusoid8
-    fig = plt.figure(figsize=(10, 9))
+
+    #charting
+    fig = plt.figure(figsize=(10, 11))
     plt.subplot(3, 1, 1)
     ax = plt.gca()
-    plt.plot(sig1)
-    plt.plot(synth_op)
+    plt.plot(mean)
+    xaxis = []
+    newsun = []
+    newmoon = []
+    newmercury = []
+    newvenus = [] 
+    newmars = []
+    newceres = []
+    newjupiter = []
+    newsaturn = []
+    newuranus = []
+    newneptune = []
+    newpluto = []
+    neweris =[]
+
+    #x axis
+    for i in range(0,len(mean)):
+        xaxis.append(i)
+        newsun.append(0)
+        newmoon.append(0)
+        newmercury.append(0)
+        newvenus.append(0)
+        newmars.append(0)
+        newceres.append(0)
+        newjupiter.append(0)
+        newsaturn.append(0)
+        newuranus.append(0)
+        newneptune.append(0)
+        newpluto.append(0)
+        neweris.append(0)
+
+
+
+
+
+
+    #print(sun,moon,mercury,venus,mars,cere)
+    if len(sun)>0:
+        for p in range (0, len(sun)):
+            for f in range(0, len(xaxis)):
+                newsun[f]=sun[p]
+            ax.plot(xaxis, newsun)
+
+    if len(moon)>0:
+        for p in range (0, len(moon)):
+            for f in range(0, len(xaxis)):
+                newmoon[f]=moon[p]
+            ax.plot(xaxis, newmoon)
+
+    if len(mercury)>0:
+        for p in range (0, len(mercury)):
+            for f in range(0, len(xaxis)):
+                newmercury[f]=mercury[p]
+            ax.plot(xaxis, newmercury)
+
+    if len(venus)>0:
+        for p in range (0, len(venus)):
+            for f in range(0, len(xaxis)):
+                newvenus[f]=venus[p]
+            ax.plot(xaxis, newvenus)
+
+    if len(mars)>0:
+        for p in range (0, len(mars)):
+            for f in range(0, len(xaxis)):
+                newmars[f]=mars[p]
+            ax.plot(xaxis, newmars)
+
+    if len(ceres)>0:
+        for p in range (0, len(ceres)):
+            for f in range(0, len(xaxis)):
+                newceres[f]=ceres[p]
+            ax.plot(xaxis, newceres)
+
+    if len(jupiter)>0:
+        for p in range (0, len(jupiter)):
+            for f in range(0, len(xaxis)):
+                newjupiter[f]=jupiter[p]
+            ax.plot(xaxis, newjupiter)
+
+    if len(saturn)>0:
+        for p in range (0, len(saturn)):
+            for f in range(0, len(xaxis)):
+                newsaturn[f]=saturn[p]
+            ax.plot(xaxis, newsaturn)
+
+    if len(uranus)>0:
+        for p in range (0, len(uranus)):
+            for f in range(0, len(xaxis)):
+                newuranus[f]=uranus[p]
+            ax.plot(xaxis, newuranus)
+
+    if len(neptune)>0:
+        for p in range (0, len(neptune)):
+            for f in range(0, len(xaxis)):
+                newneptune[f]=neptune[p]
+            ax.plot(xaxis, newneptune)
+
+    if len(pluto)>0:
+        for p in range (0, len(pluto)):
+            for f in range(0, len(xaxis)):
+                newpluto[f]=pluto[p]
+            ax.plot(xaxis, newpluto)
+
+    if len(eris)>0:
+        for p in range (0, len(eris)):
+            for f in range(0, len(xaxis)):
+                neweris[f]=eris[p]
+            ax.plot(xaxis, neweris)
+
+
+
+    #plt.plot(synth_op)
     ax.set_xlabel("Time")
     ax.set_ylabel("amplitude")
     if i == 0:
         plt.title('signal and sinusoid shown in lower plot')
     else:
-        plt.title("{} {} {}".format(loc2, ' signal and ', '8', ' sinusoids shown in middle plot added together.'))
+        plt.title('time cycle analysis')
     plt.subplot(3, 1, 2)
 
     plt.plot(sinusoid, color=next(colors))
@@ -266,51 +467,6 @@ def CandleStick_Graph():
     plotly_fig = tls.mpl_to_plotly(fig)
     show_in_window(plotly_fig)
 
-
-def Fibonic_Series_Graph(data, value):
-    price = []
-    for x in data[value]:
-        price.append(x)
-
-    # Getting min and max values of the dataframe
-    price_max = max(price)
-    price_min = min(price)
-
-    print(f"Maximum Price: {price_max}")
-    print(f"Minimum Price: {price_min}")
-
-    # Graph ploting
-    fig, ax = plt.subplots()
-
-    ax.plot(data, color='black')
-
-    # Fibonacci Levels considering original trend as upward move
-    diff = price_max - price_min
-
-    level1 = price_max - 0.236 * diff
-    level2 = price_max - 0.382 * diff
-    level3 = price_max - 0.618 * diff
-
-    print("Level", "Price")
-    print("0 ", price_max)
-    print("0.236", level1)
-    print("0.382", level2)
-    print("0.618", level3)
-    print("1 ", price_min)
-
-    # Coloring the points
-    ax.axhspan(level1, price_min, alpha=0.4, color='lightsalmon')
-    ax.axhspan(level2, level1, alpha=0.5, color='palegoldenrod')
-    ax.axhspan(level3, level2, alpha=0.5, color='palegreen')
-    ax.axhspan(price_max, level3, alpha=0.5, color='powderblue')
-
-    # ploting on x and y axis
-    plt.ylabel("Price")
-    plt.xlabel("Date")
-    plt.legend(loc=2)
-    plt.show()
-
-
 # Main Area
 if __name__ == '__main__':
     print("Main")
@@ -319,18 +475,3 @@ if __name__ == '__main__':
     # Login in the Site with Socket
     #con = fxcmpy.fxcmpy(access_token=token, log_level='error', log_file=None)
     #Data_Collect()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
