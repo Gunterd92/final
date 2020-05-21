@@ -159,6 +159,7 @@ def Data_Collect():
 def show_in_window(fig):
     # Webview Candlestick Graph
     file_path = os.getcwd() + "/templates/name.html"
+#
     plotly.offline.plot(fig, filename=file_path, auto_open=False)
     file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), file_path))
     print('Return / Task completed from code_logic.py')
@@ -257,8 +258,13 @@ def CandleStick_Graph():
     #set multiplier
     if mean.max() < 3:
         mult = .0001
-    else: mult = .01
-     
+    elif mean.max() < 999:
+    	mult = .01
+    elif mean.max() < 9999:
+    	mult = 1    	
+    elif mean.max() < 99999:
+    	mult = 10    	
+
     #set highs and lows
     highs = mean.max()
     lows = mean.min()
@@ -439,7 +445,7 @@ def CandleStick_Graph():
     if i == 0:
         plt.title('signal and sinusoid shown in lower plot')
     else:
-        plt.title('time cycle analysis')
+        plt.title(marketname)
     plt.subplot(3, 1, 2)
 
     plt.plot(sinusoid, color=next(colors))
