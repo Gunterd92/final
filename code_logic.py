@@ -14,6 +14,7 @@ import plotly
 import plotly.tools as tls
 from plotly.offline import download_plotlyjs, init_notebook_mode, iplot
 
+var_multiplier = 1.0
 var_bars = ""
 var_currency = 47
 var_period = "m1"
@@ -36,12 +37,14 @@ marketname = ""
 token = '58f6b3b0d2fd0411de1d85d418345291d375e5a5'
 
 
-def set_data(bars, currency, period, market_value):
+def set_data(mult, bars, currency, period, market_value):
     global var_bars
     global var_currency
     global var_period
     global var_market_value
+    global var_multiplier
 
+    var_multiplier = float(mult)
     var_bars = bars
     var_currency = int(currency) #+1
     var_period = period
@@ -168,6 +171,7 @@ def show_in_window(fig):
 
 
 def CandleStick_Graph():
+    global var_multiplier
     global var_bars
     global var_listing
     global data
@@ -264,7 +268,9 @@ def CandleStick_Graph():
     elif mean.max() < 9999:
         mult = 1        
     elif mean.max() < 99999:
-        mult = 10       
+        mult = 10   
+
+    mult = 1 * var_multiplier    
 
     #set highs and lows
     highs = mean.max()

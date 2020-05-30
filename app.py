@@ -32,11 +32,12 @@ def sign_in():
 def view_graph():
     curren = code_logic.get_currencies()
     if request.method == "POST":
+        multi = request.form["mult"]
         bar = request.form["bars"]
         curr = request.form["currency"]
         prd = request.form["period"]
         m_value = request.form["market_value"]
-        code_logic.set_data(bars=bar, currency=curr, period=prd, market_value=m_value)
+        code_logic.set_data(mult=multi, bars=bar, currency=curr, period=prd, market_value=m_value)
         codedata = code_logic.Data_Collect()
         msg = "yes"
         #return redirect('/view_graph')
