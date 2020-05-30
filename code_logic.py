@@ -3,14 +3,14 @@ import fxcmpy
 import pandas as pd
 import numpy as np
 import datetime
+import mpld3
+import json
 import matplotlib.pyplot as plt
-import plotly.express as px
-import plotly.graph_objects as go
 import sys, os
-import plotly.offline
 import gunicorn
 import _thread
 import itertools
+import plotly
 import plotly.tools as tls
 from plotly.offline import download_plotlyjs, init_notebook_mode, iplot
 
@@ -58,16 +58,17 @@ def get_currencies():
     except:
         print('Exception in fxcmpy connect get_currencies()')
     # Currency Colection
-    cnt = 0
-    for i in range(int(len(instruments) / 4)):
-        data = instruments[i * 4:(i + 1) * 4]
-        for d in data:
-            listing.append([cnt, d])
-            cnt=cnt+1
+    else:
+        cnt = 0
+        for i in range(int(len(instruments) / 4)):
+            data = instruments[i * 4:(i + 1) * 4]
+            for d in data:
+                listing.append([cnt, d])
+                cnt=cnt+1
 
-    con1.close()
-    var_listing = listing
-    return listing
+        con1.close()
+        var_listing = listing
+        return listing
 
 def planetarycalculation(value, multiplier, high, low):
 	planetArray = []
@@ -153,7 +154,7 @@ def Data_Collect():
     # Fibonic_Series_Graph(data, value[option])
 
     marketname = var_listing[choose][1]
-    CandleStick_Graph()
+    return CandleStick_Graph()
 
 
 def show_in_window(fig):
@@ -259,11 +260,11 @@ def CandleStick_Graph():
     if mean.max() < 3:
         mult = .0001
     elif mean.max() < 999:
-    	mult = .01
+    	mult = .001
     elif mean.max() < 9999:
-    	mult = 1    	
+    	mult = .01    	
     elif mean.max() < 99999:
-    	mult = 10    	
+    	mult = 1    	
 
     #set highs and lows
     highs = mean.max()
@@ -325,154 +326,84 @@ def CandleStick_Graph():
     synth_op = sinusoid + sinusoid2 + sinusoid3 + sinusoid4 + sinusoid5 + sinusoid6 + sinusoid7 + sinusoid8
 
     #charting
+    print(type(sinusoid))
     fig = plt.figure(figsize=(10, 11))
+
     plt.subplot(3, 1, 1)
     ax = plt.gca()
     plt.plot(mean)
-    xaxis = []
-    newsun = []
-    newmoon = []
-    newmercury = []
-    newvenus = [] 
-    newmars = []
-    newceres = []
-    newjupiter = []
-    newsaturn = []
-    newuranus = []
-    newneptune = []
-    newpluto = []
-    neweris =[]
-
-    #x axis
-    for i in range(0,len(mean)):
-        xaxis.append(i)
-        newsun.append(0)
-        newmoon.append(0)
-        newmercury.append(0)
-        newvenus.append(0)
-        newmars.append(0)
-        newceres.append(0)
-        newjupiter.append(0)
-        newsaturn.append(0)
-        newuranus.append(0)
-        newneptune.append(0)
-        newpluto.append(0)
-        neweris.append(0)
-
-
-
-
-
-
-    #print(sun,moon,mercury,venus,mars,cere)
+     #print(sun,moon,mercury,venus,mars,cere)
     if len(sun)>0:
         for p in range (0, len(sun)):
-            for f in range(0, len(xaxis)):
-                newsun[f]=sun[p]
-            ax.plot(xaxis, newsun)
+            plt.axhline(sun[p])
 
     if len(moon)>0:
         for p in range (0, len(moon)):
-            for f in range(0, len(xaxis)):
-                newmoon[f]=moon[p]
-            ax.plot(xaxis, newmoon)
+            plt.axhline(moon[p])
 
     if len(mercury)>0:
         for p in range (0, len(mercury)):
-            for f in range(0, len(xaxis)):
-                newmercury[f]=mercury[p]
-            ax.plot(xaxis, newmercury)
+            plt.axhline(mercury[p])
 
     if len(venus)>0:
         for p in range (0, len(venus)):
-            for f in range(0, len(xaxis)):
-                newvenus[f]=venus[p]
-            ax.plot(xaxis, newvenus)
+            plt.axhline(venus[p])
 
     if len(mars)>0:
         for p in range (0, len(mars)):
-            for f in range(0, len(xaxis)):
-                newmars[f]=mars[p]
-            ax.plot(xaxis, newmars)
+            plt.axhline(mars[p])
 
     if len(ceres)>0:
         for p in range (0, len(ceres)):
-            for f in range(0, len(xaxis)):
-                newceres[f]=ceres[p]
-            ax.plot(xaxis, newceres)
+            plt.axhline(ceres[p])
 
     if len(jupiter)>0:
         for p in range (0, len(jupiter)):
-            for f in range(0, len(xaxis)):
-                newjupiter[f]=jupiter[p]
-            ax.plot(xaxis, newjupiter)
+            plt.axhline(jupiter[p])
 
     if len(saturn)>0:
         for p in range (0, len(saturn)):
-            for f in range(0, len(xaxis)):
-                newsaturn[f]=saturn[p]
-            ax.plot(xaxis, newsaturn)
+            plt.axhline(saturn[p])
 
     if len(uranus)>0:
         for p in range (0, len(uranus)):
-            for f in range(0, len(xaxis)):
-                newuranus[f]=uranus[p]
-            ax.plot(xaxis, newuranus)
+            plt.axhline(uranus[p])
 
     if len(neptune)>0:
         for p in range (0, len(neptune)):
-            for f in range(0, len(xaxis)):
-                newneptune[f]=neptune[p]
-            ax.plot(xaxis, newneptune)
+            plt.axhline(neptune[p])
 
     if len(pluto)>0:
         for p in range (0, len(pluto)):
-            for f in range(0, len(xaxis)):
-                newpluto[f]=pluto[p]
-            ax.plot(xaxis, newpluto)
+            plt.axhline(pluto[p])
 
     if len(eris)>0:
         for p in range (0, len(eris)):
-            for f in range(0, len(xaxis)):
-                neweris[f]=eris[p]
-            ax.plot(xaxis, neweris)
-
-
-
-    #plt.plot(synth_op)
+            plt.axhline(eris[p])
     ax.set_xlabel("Time")
     ax.set_ylabel("amplitude")
-    if i == 0:
-        plt.title('signal and sinusoid shown in lower plot')
-    else:
-        plt.title(marketname)
-    plt.subplot(3, 1, 2)
 
-    plt.plot(sinusoid, color=next(colors))
-    plt.plot(sinusoid2, color=next(colors))
-    plt.plot(sinusoid3, color=next(colors))
-    plt.plot(sinusoid4, color=next(colors))
-    plt.plot(sinusoid5, color=next(colors))
-    #plt.plot(sinusoid6, color=next(colors))
-    #plt.plot(sinusoid7, color=next(colors))
-    #plt.plot(sinusoid8, color=next(colors))
+    plt.subplot(3, 1, 2)
+    plt.plot(sinusoid)
+    plt.plot(sinusoid2)
+    plt.plot(sinusoid3)
+    plt.plot(sinusoid4)
+    plt.plot(sinusoid5)
     ax = plt.gca()
     ax.set_xlabel("Time")
     ax.set_ylabel("amplitude")
+
     plt.subplot(3, 1, 3)
-    plt.plot(sinusoid2, color=next(colors))
-    plt.plot(sinusoid3, color=next(colors))
-    plt.plot(sinusoid4, color=next(colors))
-    plt.plot(sinusoid5, color=next(colors))
-    #plt.plot(sinusoid6, color=next(colors))
-    #plt.plot(sinusoid7, color=next(colors))
-    #plt.plot(sinusoid8, color=next(colors))
+    plt.plot(sinusoid2)
+    plt.plot(sinusoid3)
+    plt.plot(sinusoid4)
+    plt.plot(sinusoid5)
     ax = plt.gca()
     ax.set_xlabel("Time")
     ax.set_ylabel("amplitude")    
-    plotly_fig = tls.mpl_to_plotly(fig)
-    show_in_window(plotly_fig)
-
+    i_m = mpld3.fig_to_html(fig)
+    #print(i_m)
+    return i_m
 # Main Area
 if __name__ == '__main__':
     print("Main")

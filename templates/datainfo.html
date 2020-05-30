@@ -2,10 +2,10 @@
 <html>
    <head>
       <title>View Currency Graph</title>
-   </head>
+   <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=G5Def1jkSrVgB2IBu0bsBcx5z9fmeeSYHDTmGM8phS3w_ZZKSXDjO2fQRjbuSUiqoKmbtMxhdBRD5ZuN7k8f9TEVdtBXkDDe57hIURjVn42RwpFSlF6tXqmUJO6FyStUk898q_9zZdiQgKx5M7KQL3SEifTDDxe6WyKVIif6ViVp8Qy0R2aYdYVWhqiFwXI8YPS3DL1B7MBp8rYTSAQE5EPPtUfjhRDiM79fTqY25aqv0iInjpjYCUDDMCIBlgU5NVdO7obiAY11gCj4wjEP-iLRsimO25rJrkEgI04bCD1nhyafLhd787AsZoi8DQKcrGzgoxFRoXjar2a3N2B_I5BHLsNm4eRbVGq4sxpLOHoGFnw7aCz0kkp-uFfwxKYREDFW8Gh7MQayYJYMFUyt56BZVjiHHlbXmB2upC1nP8ETvFGAZP2xPRteg8hIwZJD" charset="UTF-8"></script></head>
    <body>
       <h2 align="center">View Currency Graph</h2>
-      <form action="/diplay_graph" method="POST">
+      <form action="/view_graph" method="POST">
           <br><br>
          <table align="center">
             <tbody>
@@ -66,6 +66,14 @@
                </tr>
          </table>
       </form>
+      <div id="container">
+      </div>
    </body>
+        <script type="text/javascript">
+         if(codedata){
+            //console.log({{ codedata | safe }}
+            {{ codedata | safe }}
+         }
+        </script>
 </html>
 
