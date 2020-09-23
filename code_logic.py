@@ -33,8 +33,9 @@ Neptune = 0
 Pluto = 0
 Eris = 0
 marketname = ""
-
-token = '0f67a370fc9cb9362622912f76476bcc85740408'
+#D291130372
+#2uzNe
+token = 'd79bdb3e4d29e969d8ed78803d26d0e4bc622ece'
 
 
 def set_data(mult, bars, currency, period, market_value):
