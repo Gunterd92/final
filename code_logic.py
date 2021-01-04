@@ -35,7 +35,7 @@ Eris = 0
 marketname = ""
 #D291130372
 #2uzNe
-token = 'd79bdb3e4d29e969d8ed78803d26d0e4bc622ece'
+token = 'c9611cedce7c355486533ee57613fdad85db2e20'
 
 
 def set_data(mult, bars, currency, period, market_value):
